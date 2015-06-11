@@ -1,23 +1,34 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
 package domino.ia;
 
 import java.util.ArrayList;
+import java.util.Scanner;
 
-public class Computador extends Jogador {
-    private IIA ia;
+/**
+ *
+ * @author 212031119
+ */
+public class Computador extends Jogador{
 
-    public Computador(IIA ia) {
+    private IA ia;
+    
+    public Computador(IA ia) {
         this.ia = ia;
         this.mao = new ArrayList<>();
     }
     
-    @Override
-    public Peca escolhePeca() {
-       throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public Computador copia(){
+        Computador retorno = new Computador(this.ia);
+        retorno.mao.addAll(this.mao);
+        return retorno;
     }
+    
 
-    @Override
-    public Peca escolhePonta() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public IA getIA(){
+        return ia;
     }
-
 }

@@ -1,18 +1,10 @@
 package domino.ia;
 
-import java.util.List;
+import java.util.ArrayList;
 
 public abstract class Jogador {
 
-    List<Peca> mao;
-
-    public abstract Peca escolhePeca();
-    
-    public abstract Peca escolhePonta();
-
-    public boolean comprar(Mercado mercado) {
-        return mao.add(mercado.vender());
-    }
+    ArrayList<Peca> mao;
 
     public boolean taNaMao(Peca p) {
         return mao.contains(p);
@@ -35,6 +27,9 @@ public abstract class Jogador {
                 gabao++;
             }
         }
-        return gabao<4;
+        return gabao<7;
+    }
+    public boolean jogaPeca(Peca p){
+        return mao.remove(p);
     }
 }

@@ -6,19 +6,20 @@ import java.util.Scanner;
 
 public class Domino {//Gerencia o jogo
 
-    private Jogador jogador1;
-    private Jogador jogador2;
-    private Jogador jogadorDaVez;
-    private Repositorio reposi;
-    private Mercado mercado;
+    private Humano jogadorHumano; 
+    private Computador jogadorIA;
+    private int jogadorDaVez;
+    private Repositorio repositorio;
     private Mesa mesa;
+    private Estado estadoReal;
 
     public Domino() {
         mesa = new Mesa();
-        reposi = new Repositorio();
+        repositorio = new Repositorio();
         int opcao = 0;
         boolean executa = false;
         Scanner leitor = new Scanner(System.in);
+        IA ia1;
         do {
             System.out.println("Escolha o número da opção:"
                     + "\n 1 -> Você x Computador;"
@@ -26,12 +27,14 @@ public class Domino {//Gerencia o jogo
             opcao = leitor.nextInt();
             switch (opcao) {
                 case 1:
-                    jogador1 = new Humano();
-                    jogador2 = new Computador(new MiniMaxPodaABIA());
+                    jogadorHumano = new Humano();
+                    ia1 = new MiniMax(this);
+                    jogadorIA = new Computador(ia1);
                     break;
                 case 2:
-                    jogador1 = new Computador(new MiniMaxPodaABIA());
-                    jogador2 = new Computador(new MCTSIA());
+                    ia1 = new MiniMax(this);
+                    jogadorIA = new Computador(ia1);
+                    //falta ia2
                     break;
                 default:
                     System.out.println("Digite Novamente uma opção!");
@@ -42,115 +45,161 @@ public class Domino {//Gerencia o jogo
     }
 
     public void distribui() {//falta implementar contagem de gabão!Tem que ser menor que 4 para cada jogador!
+        System.out.println("\n\n");
         ArrayList<Peca> aux = new ArrayList<>();
         do {
-            for (int i = 0; i < reposi.getPecas().size(); i++) {
-                aux.add(reposi.getPecas().get(i));
+            for (int i = 0; i < 28; i++) {
+                aux.add(repositorio.getPeca(i));
             }
             Collections.shuffle(aux);
-            for (int i = 0; i < 7; i++) {
-                jogador1.mao.add(aux.remove(i));
-                System.out.print("Jogador 1: " + jogador1.mao.get(i).getEsquerda() + "/" + jogador1.mao.get(i).getDireita() + "\t");
-                jogador2.mao.add(aux.remove(i));//Pode criar erros sem ter certeza do que tah fazendo.
-                System.out.println("Jogador 2: " + jogador2.mao.get(i).getEsquerda() + "/" + jogador2.mao.get(i).getDireita());
+            for (int i = 0; i < 14; i++) {
+                jogadorHumano.mao.add(aux.remove(0));
+                System.out.print("Jogador 1: " + jogadorHumano.mao.get(i).getEsquerda() + "/" + jogadorHumano.mao.get(i).getDireita() + "\t");
+                jogadorIA.mao.add(aux.remove(0));//Pode criar erros sem ter certeza do que tah fazendo.
+                System.out.println("Jogador 2: " + jogadorIA.mao.get(i).getEsquerda() + "/" + jogadorIA.mao.get(i).getDireita());
             }
-            mercado = new Mercado(aux);//assumindo que existem somente 14 peças dentro de repositório agora.
-            System.out.println("Distribuiu");
-        } while (!jogador1.maoEhValida() || !jogador2.maoEhValida());
-        for (int i = 0; i < mercado.getMercado().size(); i++) {
-            System.out.print(mercado.getMercado().get(i).toString() + " ");
-        }
+            Repositorio repositorioAux = repositorio.copia();
+            repositorioAux.complemento(jogadorIA.mao);
+        } while (!(jogadorHumano.maoEhValida() && jogadorIA.maoEhValida()));
+
     }
 
     public void executa() {//Turnos e tudo mais...
-        boolean jogarNovamente = false;
+//        /*boolean jogarNovamente = false;
         distribui();//1º Passo = distribuir peças.
-        realizaPrimeiraJogada();
+        boolean acabou = false;
         
-        do {
-            mesa.verMesa();
-            Peca pecaJog1 = jogadorDaVez.escolhePeca();
-            jogadorDaVez.escolhePonta();
-            
-            if (mesa.inserirEsquerda(pecaJog1)) {
-                jogadorDaVez.mao.remove(pecaJog1);
-                jogarNovamente = false;
-            } else if (mesa.inserirDireita(pecaJog1)) {
-                jogadorDaVez.mao.remove(pecaJog1);
-                jogarNovamente = false;
-            } else {
-                jogarNovamente = true;
+        this.estadoReal = new Estado(mesa, jogadorIA, jogadorDaVez, jogadorHumano.mao); //A IA deveria calcular jogadorHumano.mao
+        realizaPrimeiraJogada(estadoReal.getMesa()); 
+        while (!acabou) {
+            if (estadoReal.getJogadorDaVez() == Label.JOGADOR_COMPUTADOR) { //se está na vez da IA jogar
+                Acao acao = jogadorIA.getIA().executa(new Estado(estadoReal.getMesa(), estadoReal.getJogadorIA(), estadoReal.getJogadorDaVez(), jogadorHumano.mao));
+                estadoReal=resultado(estadoReal, acao);
+            } else {  //se está na vez do Humano jogar
+                boolean jogadaValida = false;
+                while(!jogadaValida){
+                    mesa.verMesa();
+                    Peca pecaEscolhida = jogadorHumano.escolhePeca();
+                    int pontaEscolhida = jogadorHumano.escolhePonta();
+                    estadoReal=jogadorHumano.joga(pecaEscolhida, pontaEscolhida,estadoReal);
+                }
             }
-        } while (jogarNovamente);
-    
-        
-        //Jogador com maior gabão joga.
-        //o outro jogador joga.
-        //intercala os jogadores.
-        
+        }
     }
 
-    public void realizaPrimeiraJogada() {
-        Peca pecaInicial = verificaJogadaInicial(jogador1, jogador2);//Verifica quem começa por causa do gabão.
-        if (pecaInicial == null) {
-            pecaInicial = jogadorDaVez.escolhePeca();
+    public void realizaPrimeiraJogada(Mesa mesa) {
+        Peca gabaoDeSeis = new Peca(6, 6);
+        Peca peca;
+        for (int i = 0; i < 14; i++) {
+            peca = jogadorHumano.mao.get(i);
+            if (peca.equals(gabaoDeSeis)) {
+                mesa.jogadaInicial(jogadorHumano.mao.remove(i));
+                jogadorDaVez = Label.JOGADOR_COMPUTADOR;
+                return;
+            }
         }
-        jogadorDaVez.mao.remove(pecaInicial);
-        mesa.jogadaInicial(pecaInicial);
-        trocaJogador();
+        for (int i = 0; i < 14; i++) {
+            peca = jogadorIA.mao.get(i);
+            if (peca.equals(gabaoDeSeis)) {
+                mesa.jogadaInicial(jogadorIA.mao.remove(i));
+                jogadorDaVez = Label.JOGADOR_HUMANO;
+                return;
+            }
+        }
     }
 
     /**
-     * Seleciona o maior gabão entre as duas mãos dos jogadores e seta o
-     * jogadorDaVez com o jogador que possuia o maior gabão.
+     * Retorna a MAX_VALUE, caso NO_MAX venceu, MIN_VALUE, caso NO_MIN venceu e
+     * em caso de empate retorna um valor coerente.
+     *
+     * @param e
+     * @param jogador
+     * @return
      */
-    private Peca verificaJogadaInicial(Jogador jogador1, Jogador jogador2) {
-        //verifica qual mão possui o maior gabão e seta o jogador que possui maior gabao como o jogadorDaVez
-
-        Peca pecaMaior1 = new Peca(-1, -1);
-        Peca pecaMaior2 = new Peca(-1, -1);
-        for (int i = 0; i < jogador1.mao.size(); i++) {
-            if (jogador1.mao.get(i).ehGabao() && jogador1.mao.get(i).getDireita() > pecaMaior1.getDireita()) {
-                pecaMaior1 = jogador1.mao.get(i);
+    public int utilidade(Estado e) {
+        if (e.getIa().mao.isEmpty()) { //se teve um vencedor
+            return Integer.MAX_VALUE;
+        } else if (e.getPecasInimigo().isEmpty()) {
+            return Integer.MIN_VALUE;
+        } else {//se teve um empate
+            int soma = 0;
+            for (Peca p : e.getPecasInimigo()) { //MIN
+                soma = soma + p.getDireita() + p.getEsquerda();
             }
-            if (jogador2.mao.get(i).ehGabao() && jogador2.mao.get(i).getDireita() > pecaMaior2.getDireita()) {
-                pecaMaior2 = jogador2.mao.get(i);
+            for (Peca p : e.getIa().mao) { //MAX
+                soma = soma - (p.getDireita() + p.getEsquerda());
             }
-        }
-        if (pecaMaior1.getDireita() > pecaMaior2.getDireita()) {
-            jogadorDaVez = jogador1;
-            return pecaMaior1;
-        } else if (pecaMaior1.getDireita() < pecaMaior2.getDireita()) {
-            jogadorDaVez = jogador2;
-            return pecaMaior2;
-        } else { //se nenhum jogador possui gabão, o jogador1 é setado como jogadorDaVez
-            jogadorDaVez = jogador1;
-            return null;
+            return soma;
         }
     }
 
-    private void trocaJogador() {
-        if(jogadorDaVez.equals(jogador1)){
-            jogadorDaVez = jogador2;
-        }else{
-            jogadorDaVez = jogador1;
+    public ArrayList<Acao> acoes(Estado e) { //quais as ações validas dado um estado, retorna as ações que vão gerar os proximos estados
+        ArrayList<Acao> acoesPossiveis;
+        Peca direita = e.getMesa().getPontaDireita();
+        Peca esquerda = e.getMesa().getPontaEsquerda();
+        acoesPossiveis = new ArrayList<>();
+        if (e.getJogadorDaVez() == Label.JOGADOR_MAX) { //CASO MAX
+            for (Peca pecaAtual : e.getIa().mao) {
+                if ((pecaAtual.getDireita() == direita.getDireita()) || (pecaAtual.getEsquerda() == direita.getDireita())) {
+                    acoesPossiveis.add(new AcaoJoga(pecaAtual, Label.PONTA_DIREITA));
+                }
+                if ((pecaAtual.getDireita() == esquerda.getEsquerda()) || (pecaAtual.getEsquerda() == esquerda.getEsquerda())) {
+                    acoesPossiveis.add(new AcaoJoga(pecaAtual, Label.PONTA_ESQUERDA));
+                }
+            }
+            if (acoesPossiveis.isEmpty()) {
+                acoesPossiveis.add(new AcaoPassa());
+            }
+        } else { //CASO MIN
+            for (Peca pecaAtual : e.getPecasInimigo()) {
+                if ((pecaAtual.getDireita() == direita.getDireita()) || (pecaAtual.getEsquerda() == direita.getDireita())) {
+                    acoesPossiveis.add(new AcaoJoga(pecaAtual, Label.PONTA_DIREITA));
+                }
+                if ((pecaAtual.getDireita() == esquerda.getEsquerda()) || (pecaAtual.getEsquerda() == esquerda.getEsquerda())) {
+                    acoesPossiveis.add(new AcaoJoga(pecaAtual, Label.PONTA_ESQUERDA));
+                }
+            }
+            if (acoesPossiveis.isEmpty()) {
+                acoesPossiveis.add(new AcaoPassa());
+            }
         }
-        
+        return acoesPossiveis;
     }
-    
-    public boolean ehObjetivo(Estado e){
+
+    public Estado resultado(Estado e, Acao a) {
+        return a.executa(e);
+    }
+
+    /**
+     * Se as jogadas disponíveis, dado um estado atual, tanto para MIN, quanto
+     * para MAX, são passar a jogada. Ou se uma das mãos dos jogadores acabou
+     *
+     * @param e
+     * @return
+     */
+    public boolean testeDeTermino(Estado e) {
+        //se um dos dois jogadores venceu
+        if (e.getIa().mao.isEmpty() || e.getPecasInimigo().isEmpty()) {
+            return true;
+        }
+        //Caso não tenha acabado (as mãos contem peças que podem ser jogadas)
+        int pontaDireita = e.getMesa().getPontaDireita().getDireita();
+        int pontaEsquerda = e.getMesa().getPontaEsquerda().getEsquerda();
+
+        for (Peca pecaMax : e.getIa().mao) {
+            if (pecaMax.getDireita() == pontaDireita || pecaMax.getEsquerda() == pontaDireita
+                    || pecaMax.getDireita() == pontaEsquerda || pecaMax.getEsquerda() == pontaEsquerda) {
+                return false;
+            }
+        }
+        for (Peca pecaMin : e.getPecasInimigo()) {
+            if (pecaMin.getDireita() == pontaDireita || pecaMin.getEsquerda() == pontaDireita
+                    || pecaMin.getDireita() == pontaEsquerda || pecaMin.getEsquerda() == pontaEsquerda) {
+                return false;
+            }
+        }
+        //caso mão nao esta vazia e ainda tenho peças pra jogar 
         return true;
     }
-    
-    public ArrayList<Estado> geraSucessor(){
-        return null;
-    }
-    
-    public void defineUtilidade(){
-        
-    }
-    
-    
-    
 
 }

@@ -1,17 +1,43 @@
 package domino.ia;
 
+import java.util.ArrayList;
+
 public class Estado {
-    Mesa mesa;
-    int qtdPecasMercado;
-    int qtdPecasJogadodor1;
-    int qtdPecasJogadodor2;
-    int jogadorDaVez;
-    
-    public Estado(Mesa mesa, int qtdPecasMercado, int qtdPecasJogadodor1, int qtdPecasJogadodor2, int jogadorDaVez){
+
+    private Mesa mesa;
+    private Jogador jogadorIA;
+    private int jogadorDaVez;
+    private ArrayList<Peca> pecasInimigo = new ArrayList<>();
+    private int utilidade;
+
+    public Estado(Mesa mesa, Jogador jogadorIA, int jogadorDaVez, ArrayList<Peca> pecasInimigo) { //construtor copiando
         this.mesa = mesa.copia();
-        this.qtdPecasJogadodor1 = qtdPecasJogadodor1;
-        this.qtdPecasJogadodor2 = qtdPecasJogadodor2;
-        this.qtdPecasMercado = qtdPecasMercado;
+        this.jogadorDaVez = jogadorDaVez;
+        this.pecasInimigo = new ArrayList<>();
+        this.pecasInimigo.addAll(pecasInimigo);
+        this.jogadorIA = jogadorIA;
+    }
+
+    public ArrayList<Peca> getPecasInimigo (){
+        return pecasInimigo;
     }
     
+    public Mesa getMesa() {
+        return mesa;
+    }
+
+    public Jogador getIa() {
+        return jogadorIA;
+    }
+
+    public int getJogadorDaVez() {
+        return jogadorDaVez;
+    }
+
+    public Jogador getJogadorIA() {
+        return jogadorIA;
+    }
+    
+    
+   
 }

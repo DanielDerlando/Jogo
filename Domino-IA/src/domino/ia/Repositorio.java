@@ -2,7 +2,7 @@ package domino.ia;
 
 import java.util.ArrayList;
 
-public class Repositorio {//tah criando certo, duplicatas não estão aqui...
+public class Repositorio {
 
     private final ArrayList<Peca> pecas;
 
@@ -16,8 +16,24 @@ public class Repositorio {//tah criando certo, duplicatas não estão aqui...
         }
     }
 
-    public ArrayList<Peca> getPecas() {
-        return pecas;
+    public int getTamanho() {
+        return pecas.size();
+    }
+
+    public Peca getPeca(int i) {
+        return pecas.get(i);
+    }
+
+    public boolean complemento(ArrayList<Peca> l) {
+        return pecas.removeAll(l);
+    }
+
+    public Repositorio copia() {
+        Repositorio novo = new Repositorio();
+        for (Peca peca : pecas) {
+            novo.pecas.add(peca);
+        }
+        return novo;
     }
 
 }
