@@ -8,18 +8,15 @@ public class Domino {//Gerencia o jogo
 
     private Humano jogadorHumano; 
     private Computador jogadorIA;
-    private int jogadorDaVez;
     private Repositorio repositorio;
-    private Mesa mesa;
     private Estado estadoReal;
 
     public Domino() {
-        mesa = new Mesa();
         repositorio = new Repositorio();
         int opcao = 0;
         boolean executa = false;
         Scanner leitor = new Scanner(System.in);
-        IA ia1;
+        IA ia1,ia2;
         do {
             System.out.println("Escolha o número da opção:"
                     + "\n 1 -> Você x Computador;"
@@ -29,7 +26,8 @@ public class Domino {//Gerencia o jogo
                 case 1:
                     jogadorHumano = new Humano();
                     ia1 = new MiniMax(this);
-                    jogadorIA = new Computador(ia1);
+                    ia2 = new MiniMaxPodaABIA(this);
+                    jogadorIA = new Computador(ia2);
                     break;
                 case 2:
                     ia1 = new MiniMax(this);
@@ -67,42 +65,47 @@ public class Domino {//Gerencia o jogo
     public void executa() {//Turnos e tudo mais...
 //        /*boolean jogarNovamente = false;
         distribui();//1º Passo = distribuir peças.
-        boolean acabou = false;
-        
-        this.estadoReal = new Estado(mesa, jogadorIA, jogadorDaVez, jogadorHumano.mao); //A IA deveria calcular jogadorHumano.mao
-        realizaPrimeiraJogada(estadoReal.getMesa()); 
-        while (!acabou) {
+        this.estadoReal = new Estado(new Mesa(), jogadorIA, Label.JOGADOR_COMPUTADOR, jogadorHumano.mao); //A IA deveria calcular jogadorHumano.mao
+        realizaPrimeiraJogada(estadoReal); 
+        while (!testeDeTermino(estadoReal)) {
             if (estadoReal.getJogadorDaVez() == Label.JOGADOR_COMPUTADOR) { //se está na vez da IA jogar
+
                 Acao acao = jogadorIA.getIA().executa(new Estado(estadoReal.getMesa(), estadoReal.getJogadorIA(), estadoReal.getJogadorDaVez(), jogadorHumano.mao));
                 estadoReal=resultado(estadoReal, acao);
             } else {  //se está na vez do Humano jogar
-                boolean jogadaValida = false;
-                while(!jogadaValida){
-                    mesa.verMesa();
+                Estado aux = null;
+                do{
+                    estadoReal.getMesa().verMesa();
                     Peca pecaEscolhida = jogadorHumano.escolhePeca();
-                    int pontaEscolhida = jogadorHumano.escolhePonta();
-                    estadoReal=jogadorHumano.joga(pecaEscolhida, pontaEscolhida,estadoReal);
-                }
+                    if(pecaEscolhida == null){//quer passar a vez
+                        aux=jogadorHumano.passar(estadoReal);
+                    }else{
+                        int pontaEscolhida = jogadorHumano.escolhePonta();
+                        aux=jogadorHumano.joga(pecaEscolhida, pontaEscolhida,estadoReal);
+                    }
+                }while(aux==null);//enquanto jogada for inválida
+                estadoReal=aux;
             }
         }
+        exibeResultado(estadoReal);
     }
 
-    public void realizaPrimeiraJogada(Mesa mesa) {
+    public void realizaPrimeiraJogada(Estado estado) {
         Peca gabaoDeSeis = new Peca(6, 6);
         Peca peca;
         for (int i = 0; i < 14; i++) {
             peca = jogadorHumano.mao.get(i);
             if (peca.equals(gabaoDeSeis)) {
-                mesa.jogadaInicial(jogadorHumano.mao.remove(i));
-                jogadorDaVez = Label.JOGADOR_COMPUTADOR;
+                estado.getMesa().jogadaInicial(jogadorHumano.mao.remove(i));
+                estado.setJogadorDaVez(Label.JOGADOR_COMPUTADOR);
                 return;
             }
         }
         for (int i = 0; i < 14; i++) {
             peca = jogadorIA.mao.get(i);
             if (peca.equals(gabaoDeSeis)) {
-                mesa.jogadaInicial(jogadorIA.mao.remove(i));
-                jogadorDaVez = Label.JOGADOR_HUMANO;
+                estado.getMesa().jogadaInicial(jogadorIA.mao.remove(i));
+                estado.setJogadorDaVez(Label.JOGADOR_HUMANO);
                 return;
             }
         }
@@ -200,6 +203,15 @@ public class Domino {//Gerencia o jogo
         }
         //caso mão nao esta vazia e ainda tenho peças pra jogar 
         return true;
+    }
+
+    private void exibeResultado(Estado estadoReal) {
+        estadoReal.getMesa().verMesa();
+        if(estadoReal.getJogadorDaVez() == Label.JOGADOR_COMPUTADOR){
+            System.out.println("Você perdeu :(");
+        }else{
+            System.out.println("Você venceu!");
+        }
     }
 
 }

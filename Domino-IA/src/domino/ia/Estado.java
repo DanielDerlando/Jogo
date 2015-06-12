@@ -37,6 +37,10 @@ public class Estado {
     public Jogador getJogadorIA() {
         return jogadorIA;
     }
+
+    public void setJogadorDaVez(int jogadorDaVez) {
+        this.jogadorDaVez = jogadorDaVez;
+    }
     
     
    

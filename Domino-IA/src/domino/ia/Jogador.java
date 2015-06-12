@@ -19,6 +19,7 @@ public abstract class Jogador {
         for (int i = 0; i < mao.size(); i++) {
             System.out.print("  " + i + "\t");
         }
+        System.out.println("");
     }
     public boolean maoEhValida(){
         int gabao =0;

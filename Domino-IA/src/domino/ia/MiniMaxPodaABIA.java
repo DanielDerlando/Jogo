@@ -1,5 +1,7 @@
 package domino.ia;
 
+import java.util.ArrayList;
+
 
 public class MiniMaxPodaABIA extends IA {
 
@@ -9,26 +11,53 @@ public class MiniMaxPodaABIA extends IA {
 
     @Override
     public Acao executa(Estado e) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        ArrayList<Acao> acoes = getDomino().acoes(e);
+        //ArrayList<Integer> valoresUtilidade = new ArrayList<>();
+        int valor_max = Integer.MIN_VALUE;
+        Acao maxAcao = null;
+        for (Acao aux : acoes) {
+            int valor_atual = valor_min(getDomino().resultado(e, aux),Integer.MIN_VALUE,Integer.MAX_VALUE);            
+            if(valor_atual > valor_max){
+                maxAcao = aux;
+                valor_max = valor_atual;
+            }            
+        }        
+        return maxAcao;
     }
 
-//    função ALPHA-BETA-SEARCH(estado) retorna uma ação
-//    v = MAX- VALUE(estado, -oo, +oo)
-//    retorna a ação em ACTIONS(estado) com valor v
-//    função MAX-VALUE(estado,alfa,beta) retorna um valor de utilidade
-//    if TERMINAL-TEST(estado) then retorna UTILITY(estado)
-//    v = - 00
-//    for each a in ACTIONS(estado) do
-//    v = MAX(v, MIN-VALUE(RESULT(s,a),alfa,beta))
-//    if v >= beta then retorna v
-//    alfa = MAX(alfa, v)
-//    retorna v
-//    função MIN-VALUE(estado,alfa,beta) retorna um valor de utilidade
-//    if TERMINAL-TEST(estado) then retorna UTILITY(estado)
-//    v = + 00
-//    for each a in ACTIONS(estado) do
-//    v = MIN(v, MAX-VALUE(RESULT(s,a),alfa,beta))
-//    if v <= alfa then retorna v
-//    beta = MIN(beta, v)
-//    retorna v
+    public int valor_max(Estado e,int alfa,int beta) {
+        if (getDomino().testeDeTermino(e)) {
+            return getDomino().utilidade(e);
+        } else {
+            Estado estado;
+            int valorMin = Integer.MIN_VALUE;
+            for (Acao acaoDaVez : getDomino().acoes(e)) {
+                estado = getDomino().resultado(e, acaoDaVez);
+                valorMin = Math.max(valorMin,valor_min(estado,alfa,beta));
+                if(valorMin>=beta){
+                    return valorMin;
+                }
+                alfa = Math.max(alfa, valorMin);
+            }
+            return valorMin;
+        }
+    }
+
+    private int valor_min(Estado e,int alfa,int beta) {
+        if (getDomino().testeDeTermino(e)) {
+            return getDomino().utilidade(e);
+        } else {
+            Estado estado;
+            int valorMax = Integer.MAX_VALUE;
+            for (Acao acaoDaVez : getDomino().acoes(e)) {
+                estado = getDomino().resultado(e, acaoDaVez);
+                valorMax = Math.min(valorMax,valor_max(estado,alfa,beta));
+                if(valorMax<=alfa){
+                    return valorMax;
+                }
+                beta = Math.min(beta, valorMax);
+            }
+            return valorMax;
+        }
+    }
 }

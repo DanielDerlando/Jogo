@@ -61,21 +61,4 @@ public class MiniMax extends IA {
             return utilidade;
         }
     }
-
-//    function MINIMAX-DECISION(estado) retorna uma ação
-//return arg max a in ACTIONS ( s) MIN-VALUE(RESULT(state, a))
-//______________________________________________________________
-//function MAX-VALUE( estado) retorna um valor de utilidade
-//if TERMINAL-TEST(estado) then return UTILITY(estado)
-//v = - 00
-//for each a in ACTIONS(estado) do
-//v <- MAX(v, MIN-VALUE(RESULT(s, a)))
-//return v
-//______________________________________________________________
-//function MIN-VALUE( estado) retorna um valor de utilidade
-//if TERMINAL-TEST(estado) then return UTILITY(estado)
-//v = 00
-//for each a in ACTIONS(estado) do
-//v <- MIN(v, MAX-VALUE(RESULT(s, a)))
-//return v
 }
