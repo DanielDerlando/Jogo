@@ -64,4 +64,13 @@ public class MiniMaxCutOff extends IA {
             return valorMax;
         }
     }
+    
+    public boolean cut_off(Estado e, int profundidade){
+        return e.getMesa().getLista().size() == profundidade;
+    }
+    
+    public int eval(Estado e){
+        //if(pode jogar gabao)
+        return 0;
+    }
 }

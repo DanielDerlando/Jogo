@@ -1,5 +1,6 @@
 package Problema;
 
+import Estado.Estado;
 import java.util.ArrayList;
 
 public abstract class Jogador {
@@ -33,4 +34,5 @@ public abstract class Jogador {
     public boolean jogaPeca(Peca p){
         return mao.remove(p);
     }
+    public abstract Estado executa(Estado estadoReal);
 }

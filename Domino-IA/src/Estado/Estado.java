@@ -44,7 +44,4 @@ public class Estado {
     public void setJogadorDaVez(int jogadorDaVez) {
         this.jogadorDaVez = jogadorDaVez;
     }
-    
-    
-   
 }

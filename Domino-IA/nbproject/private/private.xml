@@ -3,16 +3,24 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/Users/Daniel/Documents/NetBeansProjects/Jogo/Jogo/Domino-IA/src/domino/ia/AcaoJoga.java</file>
-            <file>file:/C:/Users/Daniel/Documents/NetBeansProjects/Jogo/Jogo/Domino-IA/src/domino/ia/Acao.java</file>
-            <file>file:/C:/Users/Daniel/Documents/NetBeansProjects/Jogo/Jogo/Domino-IA/src/domino/ia/Mesa.java</file>
-            <file>file:/C:/Users/Daniel/Documents/NetBeansProjects/Jogo/Jogo/Domino-IA/src/domino/ia/Computador.java</file>
-            <file>file:/C:/Users/Daniel/Documents/NetBeansProjects/Jogo/Jogo/Domino-IA/src/domino/ia/Humano.java</file>
-            <file>file:/C:/Users/Daniel/Documents/NetBeansProjects/Jogo/Jogo/Domino-IA/src/domino/ia/MiniMax.java</file>
-            <file>file:/C:/Users/Daniel/Documents/NetBeansProjects/Jogo/Jogo/Domino-IA/src/domino/ia/DominoIA.java</file>
-            <file>file:/C:/Users/Daniel/Documents/NetBeansProjects/Jogo/Jogo/Domino-IA/src/domino/ia/Estado.java</file>
-            <file>file:/C:/Users/Daniel/Documents/NetBeansProjects/Jogo/Jogo/Domino-IA/src/domino/ia/MiniMaxPodaABIA.java</file>
-            <file>file:/C:/Users/Daniel/Documents/NetBeansProjects/Jogo/Jogo/Domino-IA/src/domino/ia/Domino.java</file>
+            <file>file:/C:/Users/Daniel/Documents/NetBeansProjects/Jogo/Jogo/Domino-IA/src/Acao/AcaoJoga.java</file>
+            <file>file:/C:/Users/Daniel/Documents/NetBeansProjects/Jogo/Jogo/Domino-IA/src/IA/MiniMaxCutOff.java</file>
+            <file>file:/C:/Users/Daniel/Documents/NetBeansProjects/Jogo/Jogo/Domino-IA/src/Problema/Mesa.java</file>
+            <file>file:/C:/Users/Daniel/Documents/NetBeansProjects/Jogo/Jogo/Domino-IA/src/JogoDomino/GerenciadorDeJogo.java</file>
+            <file>file:/C:/Users/Daniel/Documents/NetBeansProjects/Jogo/Jogo/Domino-IA/src/IA/MiniMaxPodaABIA.java</file>
+            <file>file:/C:/Users/Daniel/Documents/NetBeansProjects/Jogo/Jogo/Domino-IA/src/Acao/Acao.java</file>
+            <file>file:/C:/Users/Daniel/Documents/NetBeansProjects/Jogo/Jogo/Domino-IA/src/Problema/Problema.java</file>
+            <file>file:/C:/Users/Daniel/Documents/NetBeansProjects/Jogo/Jogo/Domino-IA/src/Problema/Repositorio.java</file>
+            <file>file:/C:/Users/Daniel/Documents/NetBeansProjects/Jogo/Jogo/Domino-IA/src/Problema/Domino.java</file>
+            <file>file:/C:/Users/Daniel/Documents/NetBeansProjects/Jogo/Jogo/Domino-IA/src/IA/MiniMax.java</file>
+            <file>file:/C:/Users/Daniel/Documents/NetBeansProjects/Jogo/Jogo/Domino-IA/src/Util/Label.java</file>
+            <file>file:/C:/Users/Daniel/Documents/NetBeansProjects/Jogo/Jogo/Domino-IA/src/Problema/Computador.java</file>
+            <file>file:/C:/Users/Daniel/Documents/NetBeansProjects/Jogo/Jogo/Domino-IA/src/Problema/Humano.java</file>
+            <file>file:/C:/Users/Daniel/Documents/NetBeansProjects/Jogo/Jogo/Domino-IA/src/Problema/Jogador.java</file>
+            <file>file:/C:/Users/Daniel/Documents/NetBeansProjects/Jogo/Jogo/Domino-IA/src/Acao/AcaoPassa.java</file>
+            <file>file:/C:/Users/Daniel/Documents/NetBeansProjects/Jogo/Jogo/Domino-IA/src/IA/IA.java</file>
+            <file>file:/C:/Users/Daniel/Documents/NetBeansProjects/Jogo/Jogo/Domino-IA/src/JogoDomino/DominoIA.java</file>
+            <file>file:/C:/Users/Daniel/Documents/NetBeansProjects/Jogo/Jogo/Domino-IA/src/Problema/Peca.java</file>
         </group>
     </open-files>
 </project-private>

@@ -4,10 +4,12 @@ public class Peca {
 
     private int esquerda;
     private int direita;
-
-    public Peca(int esquerda, int direita) {
+    private int dono;
+    
+    public Peca(int esquerda, int direita, int dono) {
         this.esquerda = esquerda;
         this.direita = direita;
+        this.dono = dono;
     }
 
     public int getEsquerda() {
@@ -17,6 +19,15 @@ public class Peca {
     public int getDireita() {
         return direita;
     }
+
+    public int getDono() {
+        return dono;
+    }
+
+    public void setDono(int dono) {
+        this.dono = dono;
+    }
+    
 
     @Override
     public boolean equals(Object obj) {

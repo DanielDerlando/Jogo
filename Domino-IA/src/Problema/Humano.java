@@ -12,7 +12,7 @@ public class Humano extends Jogador {
 
     public Humano() {
         this.mao = new ArrayList<>();
-        
+
     }
 
     public Peca escolhePeca() {
@@ -22,13 +22,13 @@ public class Humano extends Jogador {
         do {
             verMao();
             System.out.print("Entre com o indice da peça que deseja jogar: ");
-            try{
-            indice = in.nextInt();
-            }catch(InputMismatchException e){
+            try {
+                indice = in.nextInt();
+            } catch (InputMismatchException e) {
                 String passar = in.nextLine();
-                if(passar.equals("passar")){
+                if (passar.equals("passar")) {
                     return null;
-                }else{
+                } else {
                     indice = Integer.MAX_VALUE;
                 }
             }
@@ -42,23 +42,18 @@ public class Humano extends Jogador {
         in = new Scanner(System.in);
         System.out.println("Digite a ponta desejada:\n[Esquerda: 0 | Direita: 1]");
         int retorno = in.nextInt();
-        in=null;
+        in = null;
         return retorno;
-    }
-
-    //IMPLEMENTAR A COMPRA QUE A IA SIMULA, NA COMPRA NÂO ESTAMOS MUDANDO A MÂO NEM O MERCADO DO HUMANO DE FATO
-    public void decidirPeca() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     public Estado joga(Peca pecaEscolhida, int pontaEscolhida, Estado estadoReal) {
         if (pontaEscolhida == Label.PONTA_ESQUERDA) {
-            if(!estadoReal.getMesa().inserirEsquerda(pecaEscolhida)){
+            if (!estadoReal.getMesa().inserirEsquerda(pecaEscolhida)) {
                 System.out.println("Peça Inválida, tente novamente");
                 return null;
             }
         } else if (pontaEscolhida == Label.PONTA_DIREITA) {
-            if(!estadoReal.getMesa().inserirDireita(pecaEscolhida)){
+            if (!estadoReal.getMesa().inserirDireita(pecaEscolhida)) {
                 System.out.println("Peça Inválida, tente novamente");
                 return null;
             }
@@ -67,10 +62,26 @@ public class Humano extends Jogador {
             return null;
         }
         this.mao.remove(pecaEscolhida);
-        return new Estado(estadoReal.getMesa(), estadoReal.getIa(), Label.JOGADOR_COMPUTADOR, this.mao);
+        return new Estado(estadoReal.getMesa(), estadoReal.getIa(), Label.JOGADOR1, this.mao);
     }
-    public Estado passar(Estado estadoReal){
-        return new Estado(estadoReal.getMesa(), estadoReal.getIa(), Label.JOGADOR_COMPUTADOR, this.mao);
+
+    public Estado passar(Estado estadoReal) {
+        return new Estado(estadoReal.getMesa(), estadoReal.getIa(), Label.JOGADOR1, this.mao);
+    }
+
+    @Override
+    public Estado executa(Estado estadoReal) {
+        Estado retorno;
+        do {
+            Peca pecaEscolhida = escolhePeca();
+            if (pecaEscolhida == null) {//quer passar a vez
+                retorno = passar(estadoReal);
+            } else {
+                int pontaEscolhida = escolhePonta();
+                retorno = joga(pecaEscolhida, pontaEscolhida, estadoReal);
+            }
+        } while (retorno == null);
+        return retorno;
     }
 
 }

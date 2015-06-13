@@ -10,7 +10,7 @@ public class Repositorio {
         this.pecas = new ArrayList<>();
         for (int i = 0; i <= 6; i++) {
             for (int j = i; j <= 6; j++) {
-                pecas.add(new Peca(i, j));
+                pecas.add(new Peca(i, j,-1));
 //                System.out.println(i + "/" + j);
             }
         }

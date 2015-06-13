@@ -5,6 +5,8 @@
  */
 package Problema;
 
+import Acao.Acao;
+import Estado.Estado;
 import IA.IA;
 import java.util.ArrayList;
 
@@ -30,5 +32,15 @@ public class Computador extends Jogador{
 
     public IA getIA(){
         return ia;
+    }
+
+    @Override
+    public Estado executa(Estado estadoReal) {
+        Estado retorno;
+        System.out.println("Aguarde um instante. Estou pensando!");
+        Acao acao = ia.executa(estadoReal);
+        retorno = ia.getProblema().resultado(estadoReal, acao);
+        System.out.println("O Computador tem " + (estadoReal.getIa().mao.size() - 1) + " de peças na mão!");
+        return retorno;
     }
 }
