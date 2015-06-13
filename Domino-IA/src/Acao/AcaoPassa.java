@@ -1,4 +1,8 @@
-package domino.ia;
+package Acao;
+
+import Estado.Estado;
+import Util.Label;
+import Problema.Peca;
 
 public class AcaoPassa extends Acao {
 

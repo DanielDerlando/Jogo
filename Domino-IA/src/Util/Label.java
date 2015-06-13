@@ -1,4 +1,4 @@
-package domino.ia;
+package Util;
 
 public class Label {
     public static final int JOGADOR_COMPUTADOR= 0;

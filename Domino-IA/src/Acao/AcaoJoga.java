@@ -1,5 +1,10 @@
-package domino.ia;
+package Acao;
 
+import Problema.Computador;
+import Estado.Estado;
+import Problema.Jogador;
+import Util.Label;
+import Problema.Peca;
 import java.util.ArrayList;
 
 public class AcaoJoga extends Acao {

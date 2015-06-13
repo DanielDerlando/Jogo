@@ -1,4 +1,4 @@
-package domino.ia;
+package Problema;
 
 public class Peca {
 

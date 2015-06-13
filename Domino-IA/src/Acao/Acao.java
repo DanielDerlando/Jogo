@@ -1,4 +1,7 @@
-package domino.ia;
+package Acao;
+
+import Estado.Estado;
+import Problema.Peca;
 
 public abstract class Acao {
 

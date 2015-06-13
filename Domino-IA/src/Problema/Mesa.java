@@ -1,4 +1,4 @@
-package domino.ia;
+package Problema;
 
 import java.util.ArrayList;
 

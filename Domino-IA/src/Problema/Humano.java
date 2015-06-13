@@ -1,5 +1,7 @@
-package domino.ia;
+package Problema;
 
+import Estado.Estado;
+import Util.Label;
 import java.util.ArrayList;
 import java.util.InputMismatchException;
 import java.util.Scanner;

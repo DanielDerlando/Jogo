@@ -1,10 +1,10 @@
-package domino.ia;
+package Problema;
 
 import java.util.ArrayList;
 
 public abstract class Jogador {
 
-    ArrayList<Peca> mao;
+    public ArrayList<Peca> mao;
 
     public boolean taNaMao(Peca p) {
         return mao.contains(p);
