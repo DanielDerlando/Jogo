@@ -117,8 +117,8 @@ public class Domino extends Problema {//Gerencia o jogo
     public int eval(Estado e) {
         int soma = 0;
         soma = soma + 2*qtdPecasJogaveisDoInimigo(e);
-        soma = soma + 2*descartaGabao(e);
-        soma = soma + 1*qtdGabao(e);
+        soma = soma + 1*descartaGabao(e);
+        soma = soma + 2*qtdGabao(e);
         soma = soma + 1*qtdPecasDosJogadores(e);
         soma = soma + 2*qtdPontasJogaveis(e);
         soma = soma + 2*verificaPontuacao(e);
@@ -172,10 +172,25 @@ public class Domino extends Problema {//Gerencia o jogo
 
     public int descartaGabao(Estado e) {
         int retorno=0;
+        Peca esq = e.getMesa().getPontaEsquerda();
+        Peca dir = e.getMesa().getPontaDireita();
+        for (Peca peca : e.getJogadorIa().mao) {
+            if(peca.ehGabao()){
+                if(esq.getEsquerda()==peca.getDireita())
+                    retorno++;
+                if(dir.getDireita()==peca.getDireita())
+                    retorno++;
+            }
+        }
         return retorno;
     }
     public int qtdGabao(Estado e){
         int retorno=0;
+        for (Peca peca : e.getJogadorIa().mao) {
+            if(peca.ehGabao()){
+                retorno--;
+            }
+        }
         return retorno;
     }
 
