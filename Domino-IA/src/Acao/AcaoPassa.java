@@ -22,8 +22,7 @@ public class AcaoPassa extends Acao {
         } else {
             proxJogador = Label.JOGADOR_MAX;
         }        
-        return new Estado(e.getMesa(), e.getIa(), proxJogador, e.getPecasInimigo());
-
+        return new Estado(e.getMesa(), e.getJogadorIa(), proxJogador, e.getPecasInimigo());
     }
 
 }

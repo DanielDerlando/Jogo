@@ -20,7 +20,7 @@ public class AcaoJoga extends Acao {
 
         if (e.getJogadorDaVez() == Label.JOGADOR_MAX) {
             jogadorDaVez = Label.JOGADOR_MIN;
-            Jogador atualizaIA = ((Computador)e.getIa()).copia();
+            Jogador atualizaIA = ((Computador)e.getJogadorIa()).copia();
             atualizaIA.jogaPeca(getPeca());
             novo = new Estado(e.getMesa(), atualizaIA, jogadorDaVez, e.getPecasInimigo());
         } else {
@@ -29,7 +29,7 @@ public class AcaoJoga extends Acao {
             ArrayList<Peca> pecas = new ArrayList<>();
             pecas.addAll(e.getPecasInimigo());
             pecas.remove(getPeca());
-            novo = new Estado(e.getMesa(), e.getIa(), jogadorDaVez, pecas);
+            novo = new Estado(e.getMesa(), e.getJogadorIa(), jogadorDaVez, pecas);
         }
 
         if (getPonta() == Label.PONTA_ESQUERDA) {

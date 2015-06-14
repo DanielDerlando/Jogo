@@ -10,9 +10,9 @@ public class Humano extends Jogador {
 
     Scanner in;
 
-    public Humano() {
+    public Humano(String nome) {
         this.mao = new ArrayList<>();
-
+        this.nome=nome;
     }
 
     public Peca escolhePeca() {
@@ -62,11 +62,11 @@ public class Humano extends Jogador {
             return null;
         }
         this.mao.remove(pecaEscolhida);
-        return new Estado(estadoReal.getMesa(), estadoReal.getIa(), Label.JOGADOR1, this.mao);
+        return new Estado(estadoReal.getMesa(), estadoReal.getJogadorIa(), Label.JOGADOR1, this.mao);
     }
 
     public Estado passar(Estado estadoReal) {
-        return new Estado(estadoReal.getMesa(), estadoReal.getIa(), Label.JOGADOR1, this.mao);
+        return new Estado(estadoReal.getMesa(), estadoReal.getJogadorIa(), Label.JOGADOR1, this.mao);
     }
 
     @Override

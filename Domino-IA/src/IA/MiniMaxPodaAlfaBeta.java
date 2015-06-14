@@ -4,9 +4,9 @@ import Acao.Acao;
 import Problema.Problema;
 import Estado.Estado;
 
-public class MiniMaxPodaABIA extends IA {
+public class MiniMaxPodaAlfaBeta extends IA {
 
-    public MiniMaxPodaABIA(Problema p) {
+    public MiniMaxPodaAlfaBeta(Problema p) {
         super(p);
     }
 

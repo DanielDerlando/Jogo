@@ -8,6 +8,7 @@ package Problema;
 import Acao.Acao;
 import Estado.Estado;
 import IA.IA;
+import Util.Label;
 import java.util.ArrayList;
 
 /**
@@ -18,13 +19,14 @@ public class Computador extends Jogador{
 
     private IA ia;
     
-    public Computador(IA ia) {
+    public Computador(IA ia,String nome) {
         this.ia = ia;
         this.mao = new ArrayList<>();
+        this.nome=nome;
     }
     
     public Computador copia(){
-        Computador retorno = new Computador(this.ia);
+        Computador retorno = new Computador(this.ia,this.nome);
         retorno.mao.addAll(this.mao);
         return retorno;
     }
@@ -35,12 +37,22 @@ public class Computador extends Jogador{
     }
 
     @Override
-    public Estado executa(Estado estadoReal) {
+    public Estado executa(Estado estadoInicial) {
         Estado retorno;
         System.out.println("Aguarde um instante. Estou pensando!");
-        Acao acao = ia.executa(estadoReal);
-        retorno = ia.getProblema().resultado(estadoReal, acao);
-        System.out.println("O Computador tem " + (estadoReal.getIa().mao.size() - 1) + " de peças na mão!");
+        Acao acao = ia.executa(estadoInicial);
+        retorno = ia.getProblema().resultado(estadoInicial, acao);
+        if(estadoInicial.getMesa().getLista().size()<retorno.getMesa().getLista().size()){
+            if(!estadoInicial.getMesa().getPontaDireita().equals(retorno.getMesa().getPontaDireita())){
+                mao.remove(retorno.getMesa().getPontaDireita());
+            }else{
+                mao.remove(retorno.getMesa().getPontaEsquerda());
+            }
+        }
+        System.out.println("O "+nome+" tem " + mao.size() + " de peças na mão!");
+        //}else{
+        //    System.out.println("O "+nome+" tem " + (estadoReal.getPecasInimigo().size()) + " de peças na mão!");
+        //}
         return retorno;
     }
 }

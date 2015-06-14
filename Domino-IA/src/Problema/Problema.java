@@ -20,7 +20,8 @@ public abstract class Problema {
     public abstract ArrayList<Acao> acoes(Estado e);
     public abstract Estado resultado(Estado e, Acao a);
     public abstract boolean testeDeTermino(Estado e);
-    
+    public abstract int eval(Estado e);
+    public abstract boolean cut_off(Estado e, int profundidade);
     
     public Estado getEstadoReal() {
         return estadoReal;

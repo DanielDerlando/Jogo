@@ -2,16 +2,21 @@ package IA;
 
 import Acao.Acao;
 import Estado.Estado;
+import Problema.Peca;
 import Problema.Problema;
+import Util.Label;
+import java.util.ArrayList;
 
 public class MiniMaxCutOff extends IA {
-
+    
+    public static int nivel;
     public MiniMaxCutOff(Problema p) {
         super(p);
     }
 
     @Override
     public Acao executa(Estado e) {
+        nivel=e.getMesa().getLista().size();
         int alfa = Integer.MIN_VALUE;
         int beta = Integer.MAX_VALUE;
         int valor_atual = Integer.MIN_VALUE;
@@ -24,14 +29,14 @@ public class MiniMaxCutOff extends IA {
             }
             if (valor_atual >= beta) {
                 break;
-            }            
+            }
         }
         return maxAcao;
     }
 
     public int valor_max(Estado e, int alfa, int beta) {
-        if (getProblema().testeDeTermino(e)) {
-            return getProblema().utilidade(e);
+        if (getProblema().cut_off(e, 5)) {
+            return getProblema().eval(e);
         } else {
             Estado estado;
             int valorMin = Integer.MIN_VALUE;
@@ -48,8 +53,8 @@ public class MiniMaxCutOff extends IA {
     }
 
     private int valor_min(Estado e, int alfa, int beta) {
-        if (getProblema().testeDeTermino(e)) {
-            return getProblema().utilidade(e);
+        if (getProblema().cut_off(e, 5)) {
+            return getProblema().eval(e);
         } else {
             Estado estado;
             int valorMax = Integer.MAX_VALUE;
@@ -64,13 +69,8 @@ public class MiniMaxCutOff extends IA {
             return valorMax;
         }
     }
+
     
-    public boolean cut_off(Estado e, int profundidade){
-        return e.getMesa().getLista().size() == profundidade;
-    }
+
     
-    public int eval(Estado e){
-        //if(pode jogar gabao)
-        return 0;
-    }
 }

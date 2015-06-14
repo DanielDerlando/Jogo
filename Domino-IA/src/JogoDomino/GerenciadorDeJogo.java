@@ -11,11 +11,12 @@ import Problema.Mesa;
 import Problema.Computador;
 import Problema.Repositorio;
 import Estado.Estado;
-import IA.MiniMaxPodaABIA;
+import IA.MiniMaxPodaAlfaBeta;
 import IA.MiniMax;
 import IA.IA;
 import Util.Label;
 import Acao.Acao;
+import IA.MiniMaxCutOff;
 import Problema.Jogador;
 import Problema.Problema;
 import java.util.ArrayList;
@@ -27,7 +28,7 @@ import java.util.Scanner;
  * @author Daniel
  */
 public class GerenciadorDeJogo {
-    
+
     private Jogador jogador1;
     private Jogador jogador2;
     private Repositorio repositorio;
@@ -42,7 +43,7 @@ public class GerenciadorDeJogo {
         int opcao = 0;
         boolean executa = false;
         Scanner leitor = new Scanner(System.in);
-        IA ia1, ia2;
+        IA ia2, ia1;
         do {
             System.out.print("Menu: "
                     + "\n1 -> Você x Computador;"
@@ -52,15 +53,39 @@ public class GerenciadorDeJogo {
             opcao = leitor.nextInt();
             switch (opcao) {
                 case 1:
-                    ia1 = new MiniMaxPodaABIA(p);
-                    jogador1 = new Computador(ia1);
-                    jogador2 = new Humano();
+                    leitor.nextLine();
+                    System.out.print("Digite o seu nome: ");
+                    jogador2 = new Humano(leitor.nextLine());
+                    String nome = "";
+                    do {
+                        System.out.print("\n1 -> MiniMaxPodaAlfaBeta"
+                                + "\n2 -> MiniMaxCutOff"
+                                +"\nEntre com número da IA que deseja jogar contra:");
+                        opcao = leitor.nextInt();
+                        switch (opcao) {
+                            case 1:
+                                ia1 = new MiniMaxPodaAlfaBeta(p);
+                                nome = "AlfaBeta";
+                                break;
+                            case 2:
+                                ia1 = new MiniMaxCutOff(p);
+                                nome = "CutOff";
+                                break;
+                            default:
+                                System.out.println("Digite Novamente uma opção!");
+                                executa = true;
+                                ia1 = null;
+                                break;
+                        }
+                    } while (executa);
+                    executa = false;
+                    jogador1 = new Computador(ia1, nome);
                     break;
                 case 2:
-                    ia1 = new MiniMaxPodaABIA(p);
-                    ia2 = new MiniMax(p);
-                    jogador1 = new Computador(ia1);
-                    jogador2 = new Computador(ia2);
+                    ia1 = new MiniMaxPodaAlfaBeta(p);
+                    ia2 = new MiniMaxCutOff(p);
+                    jogador1 = new Computador(ia1, "PodaAlfaBeta");
+                    jogador2 = new Computador(ia2, "CutOff");
                     break;
                 default:
                     System.out.println("Digite Novamente uma opção!");
@@ -68,7 +93,7 @@ public class GerenciadorDeJogo {
                     break;
             }
         } while (executa);
-        executa(jogador1, jogador2);
+        executa();
     }
 
     public void distribui() {//falta implementar contagem de gabão!Tem que ser menor que 4 para cada jogador!
@@ -93,19 +118,21 @@ public class GerenciadorDeJogo {
 
     }
 
-    private void executa(Jogador jogadorIA, Jogador jogadorHumano) {//Turnos e tudo mais...
+    private void executa() {//Turnos e tudo mais...
 //        /*boolean jogarNovamente = false;
         distribui();//1º Passo = distribuir peças.
-        p.setEstadoReal(new Estado(new Mesa(), jogadorIA, Label.JOGADOR1, jogadorHumano.mao));
+        p.setEstadoReal(new Estado(new Mesa(), jogador1, Label.JOGADOR1, jogador2.mao));
         Estado estadoReal = p.getEstadoReal();
         realizaPrimeiraJogada(estadoReal);
         while (!p.testeDeTermino(estadoReal)) {
             System.out.println("Mesa: ");
             estadoReal.getMesa().verMesa();
             if (estadoReal.getJogadorDaVez() == Label.JOGADOR1) { //se está na vez da IA jogar
-                p.setEstadoReal(jogadorIA.executa(estadoReal));
+                System.out.println("Turno "+jogador1.getNome()+":");
+                p.setEstadoReal(jogador1.executa(p.getEstadoReal()));
             } else {  //se está na vez do Humano jogar
-                p.setEstadoReal(jogadorHumano.executa(p.getEstadoReal()));
+                System.out.println("Turno "+jogador2.getNome()+":");
+                p.setEstadoReal(jogador2.executa(p.getEstadoReal()));
 
             }
             estadoReal = p.getEstadoReal();
@@ -113,27 +140,28 @@ public class GerenciadorDeJogo {
         exibeResultado(estadoReal);
     }
 
-    public void realizaPrimeiraJogada(Estado estado) {
-        Peca gabaoDeSeis = new Peca(6, 6,-1);
+    public Estado realizaPrimeiraJogada(Estado estado) {
+        Peca gabaoDeSeis = new Peca(6, 6, -1);
         Peca peca;
         for (int i = 0; i < 14; i++) {
-            peca = jogador2.mao.get(i);
+            peca = estado.getPecasInimigo().get(i);
             if (peca.equals(gabaoDeSeis)) {
-                estado.getMesa().jogadaInicial(jogador2.mao.remove(i));
+                estado.getMesa().jogadaInicial(estado.getPecasInimigo().remove(i));
                 estado.setJogadorDaVez(Label.JOGADOR1);
-                System.out.println("\n Você fez a primeira jogada!");
-                return;
+                System.out.println("\n "+jogador2.getNome()+" fez a primeira jogada!");
+                return estado;
             }
         }
         for (int i = 0; i < 14; i++) {
-            peca = jogador1.mao.get(i);
+            peca = estado.getJogadorIa().mao.get(i);
             if (peca.equals(gabaoDeSeis)) {
-                estado.getMesa().jogadaInicial(jogador1.mao.remove(i));
+                estado.getMesa().jogadaInicial(estado.getJogadorIa().mao.remove(i));
                 estado.setJogadorDaVez(Label.JOGADOR2);
-                System.out.println("\n Eu fiz a primeira jogada!");
-                return;
+                System.out.println("\n "+jogador1.getNome()+" fez a primeira jogada!");
+                return estado;
             }
         }
+        return null;
     }
 
     /**
@@ -146,9 +174,9 @@ public class GerenciadorDeJogo {
     private void exibeResultado(Estado estadoFinal) {
         estadoFinal.getMesa().verMesa();
         if (estadoFinal.getJogadorDaVez() == Label.JOGADOR2) {
-            System.out.println("Você perdeu :(");
+            System.out.println(jogador1.getNome()+" venceu!");
         } else {
-            System.out.println("Você venceu!");
+            System.out.println(jogador2.getNome()+" venceu!");
         }
     }
 }

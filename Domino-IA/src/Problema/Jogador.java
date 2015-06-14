@@ -6,6 +6,7 @@ import java.util.ArrayList;
 public abstract class Jogador {
 
     public ArrayList<Peca> mao;
+    String nome;
 
     public boolean taNaMao(Peca p) {
         return mao.contains(p);
@@ -35,4 +36,9 @@ public abstract class Jogador {
         return mao.remove(p);
     }
     public abstract Estado executa(Estado estadoReal);
+
+    public String getNome() {
+        return nome;
+    }
+    
 }

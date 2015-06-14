@@ -10,38 +10,36 @@ public class Estado {
     private final Mesa mesa;
     private final Jogador jogadorIA;
     private int jogadorDaVez;
-    private ArrayList<Peca> pecasInimigo = new ArrayList<>();
+    private final ArrayList<Peca> jogadorInimigo;
 //    private int utilidade;
 
     public Estado(Mesa mesa, Jogador jogadorIA, int jogadorDaVez, ArrayList<Peca> pecasInimigo) { //construtor copiando
         this.mesa = mesa.copia();
         this.jogadorDaVez = jogadorDaVez;
-        this.pecasInimigo = new ArrayList<>();
-        this.pecasInimigo.addAll(pecasInimigo);
+        this.jogadorInimigo = pecasInimigo;
         this.jogadorIA = jogadorIA;
     }
 
     public ArrayList<Peca> getPecasInimigo (){
-        return pecasInimigo;
+        return jogadorInimigo;
     }
     
     public Mesa getMesa() {
         return mesa;
     }
 
-    public Jogador getIa() {
-        return jogadorIA;
-    }
 
     public int getJogadorDaVez() {
         return jogadorDaVez;
     }
 
-    public Jogador getJogadorIA() {
-        return jogadorIA;
-    }
 
     public void setJogadorDaVez(int jogadorDaVez) {
         this.jogadorDaVez = jogadorDaVez;
     }
+
+    public Jogador getJogadorIa() {
+        return jogadorIA;
+    }
+    
 }

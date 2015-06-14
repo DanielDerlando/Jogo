@@ -63,5 +63,8 @@ public class Peca {
     public boolean ehGabao(){
         return this.direita==this.esquerda;
     }
+    public int getValor(){
+        return this.direita+this.esquerda;
+    }
 
 }
